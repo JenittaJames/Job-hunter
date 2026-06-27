@@ -1,0 +1,221 @@
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+
+  h1 {
+    font-size: 1.85rem;
+    font-weight: 800;
+    color: #ffffff;
+    margin: 0 0 4px 0;
+  }
+
+  .subtitle {
+    color: #9ca3af;
+    font-size: 0.9rem;
+    margin: 0;
+  }
+}
+
+.gradient-btn {
+  background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%) !important;
+  color: #ffffff !important;
+  font-weight: 600 !important;
+  border-radius: 8px !important;
+  box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3) !important;
+}
+
+.filter-card {
+  background-color: #111827 !important;
+  border: 1px solid #1f2937 !important;
+  border-radius: 12px !important;
+  padding: 20px !important;
+  margin-bottom: 24px !important;
+  color: #ffffff !important;
+
+  .filter-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 16px;
+    align-items: center;
+
+    @media (min-width: 768px) {
+      grid-template-columns: minmax(220px, 2fr) minmax(180px, 1.5fr) auto;
+    }
+  }
+
+  .filter-actions {
+    display: flex;
+    justify-content: flex-end;
+    
+    button {
+      color: #9ca3af !important;
+      border-color: #374151 !important;
+      height: 48px;
+      
+      &:hover {
+        background-color: #1f2937;
+        color: #ffffff !important;
+      }
+    }
+  }
+}
+
+.table-card {
+  background-color: #111827 !important;
+  border: 1px solid #1f2937 !important;
+  border-radius: 12px !important;
+  padding: 0 !important;
+  overflow: hidden !important;
+  color: #ffffff !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2) !important;
+}
+
+.table-container {
+  overflow-x: auto;
+  width: 100%;
+}
+
+.dark-table {
+  background-color: #111827 !important;
+  width: 100%;
+
+  th.mat-mdc-header-cell {
+    color: #9ca3af !important;
+    font-weight: 600 !important;
+    font-size: 0.85rem !important;
+    border-bottom: 1px solid #1f2937 !important;
+    padding: 16px !important;
+    background-color: #0f172a !important;
+  }
+
+  td.mat-mdc-cell {
+    color: #e5e7eb !important;
+    font-size: 0.9rem !important;
+    border-bottom: 1px solid #1f2937 !important;
+    padding: 16px !important;
+  }
+
+  tr.mat-mdc-row:hover {
+    background-color: rgba(31, 41, 55, 0.4) !important;
+  }
+}
+
+.company-link {
+  color: #3b82f6;
+  text-decoration: none;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  min-width: 0;
+  overflow-wrap: anywhere;
+
+  &:hover {
+    color: #60a5fa;
+    text-decoration: underline;
+  }
+
+  .link-icon {
+    font-size: 14px;
+    height: 14px;
+    width: 14px;
+  }
+}
+
+.status-badge {
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  display: inline-block;
+  text-align: center;
+  max-width: 100%;
+}
+
+.status-no-response {
+  background-color: rgba(156, 163, 175, 0.15);
+  color: #9ca3af;
+  border: 1px solid rgba(156, 163, 175, 0.3);
+}
+
+.status-interested {
+  background-color: rgba(16, 185, 129, 0.15);
+  color: #34d399;
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  box-shadow: 0 0 10px rgba(16, 185, 129, 0.15);
+}
+
+.status-not-interested {
+  background-color: rgba(239, 68, 68, 0.15);
+  color: #f87171;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+.actions-header {
+  text-align: right !important;
+}
+
+.actions-cell {
+  text-align: right !important;
+  white-space: nowrap;
+}
+
+.action-icon {
+  font-size: 18px;
+  height: 18px;
+  width: 18px;
+  
+  &.edit {
+    color: #9ca3af;
+    &:hover { color: #3b82f6; }
+  }
+
+  &.delete {
+    color: #9ca3af;
+    &:hover { color: #ef4444; }
+  }
+}
+
+.empty-cell {
+  text-align: center !important;
+  padding: 32px !important;
+  color: #6b7280 !important;
+  font-style: italic;
+}
+
+.dark-paginator {
+  background-color: #0f172a !important;
+  color: #9ca3af !important;
+  border-top: 1px solid #1f2937 !important;
+}
+
+.loading-overlay {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 40vh;
+  background-color: #111827;
+  gap: 16px;
+}
+
+.glow-spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid rgba(59, 130, 246, 0.1);
+  border-left-color: #3b82f6;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+.loading-text {
+  color: #9ca3af;
+  font-size: 0.9rem;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}

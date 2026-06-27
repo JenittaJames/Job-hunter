@@ -1,0 +1,74 @@
+<h2 mat-dialog-title class="dialog-title">{{ isEditMode ? 'Edit Job Application' : 'Add Job Application' }}</h2>
+<form [formGroup]="jobForm" (ngSubmit)="onSubmit()">
+  <mat-dialog-content class="dialog-content">
+    <div class="form-grid">
+      <mat-form-field appearance="outline">
+        <mat-label>Company Name</mat-label>
+        <input matInput formControlName="companyName" placeholder="e.g. Google">
+        @if (jobForm.get('companyName')?.hasError('required')) {
+          <mat-error>Company name is required</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Job Title</mat-label>
+        <input matInput formControlName="jobTitle" placeholder="e.g. Senior MEAN Stack Developer">
+        @if (jobForm.get('jobTitle')?.hasError('required')) {
+          <mat-error>Job title is required</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Job URL</mat-label>
+        <input matInput formControlName="jobUrl" placeholder="https://linkedin.com/jobs/view/...">
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Location</mat-label>
+        <input matInput formControlName="location" placeholder="e.g. Remote, NY">
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Salary / Range</mat-label>
+        <input matInput formControlName="salary" placeholder="e.g. $120,000/yr">
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Applied Date</mat-label>
+        <input matInput type="date" formControlName="appliedDate">
+        @if (jobForm.get('appliedDate')?.hasError('required')) {
+          <mat-error>Applied date is required</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Application Source</mat-label>
+        <input matInput formControlName="applicationSource" placeholder="e.g. LinkedIn, Indeed, Company Site">
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Status</mat-label>
+        <mat-select formControlName="status">
+          <mat-option value="Applied">Applied</mat-option>
+          <mat-option value="Interview Scheduled">Interview Scheduled</mat-option>
+          <mat-option value="Technical Round">Technical Round</mat-option>
+          <mat-option value="HR Round">HR Round</mat-option>
+          <mat-option value="Rejected">Rejected</mat-option>
+          <mat-option value="Offer">Offer</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="col-span-2">
+        <mat-label>Notes / Details</mat-label>
+        <textarea matInput formControlName="notes" rows="3" placeholder="Key tech stack listed, interview names, follow-up ideas..."></textarea>
+      </mat-form-field>
+    </div>
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end" class="dialog-actions">
+    <button mat-button type="button" (click)="onCancel()">Cancel</button>
+    <button mat-flat-button color="primary" type="submit" [disabled]="jobForm.invalid">
+      {{ isEditMode ? 'Update' : 'Create' }}
+    </button>
+  </mat-dialog-actions>
+</form>

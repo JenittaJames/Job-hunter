@@ -1,0 +1,171 @@
+@if (isLoading()) {
+  <div class="loading-overlay">
+    <div class="glow-spinner"></div>
+    <span class="loading-text">Loading dashboard...</span>
+  </div>
+} @else if (summary()) {
+  <div class="dashboard-grid">
+    <!-- Header Card -->
+    <div class="header-card card-span-all">
+      <div class="greeting">
+        <h1>Welcome Back, {{ currentUser()?.name }}!</h1>
+        <p>Keep pushing towards your goals. Here is your job search activity dashboard.</p>
+      </div>
+      <div class="header-action">
+        <button mat-flat-button class="gradient-btn" (click)="toggleEditTargets()">
+          <mat-icon>settings</mat-icon>
+          Adjust Targets
+        </button>
+      </div>
+    </div>
+
+    <!-- Edit Targets Drawer/Card -->
+    @if (isEditingTargets()) {
+      <mat-card class="edit-targets-card card-span-all">
+        <mat-card-header>
+          <mat-card-title>Update Daily Targets</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <form [formGroup]="targetsForm" (ngSubmit)="saveTargets()" class="targets-form">
+            <mat-form-field appearance="outline">
+              <mat-label>Applications</mat-label>
+              <input matInput type="number" formControlName="applications">
+              <mat-icon matSuffix>work</mat-icon>
+            </mat-form-field>
+            
+            <mat-form-field appearance="outline">
+              <mat-label>Startup Outreach</mat-label>
+              <input matInput type="number" formControlName="outreach">
+              <mat-icon matSuffix>send</mat-icon>
+            </mat-form-field>
+            
+            <mat-form-field appearance="outline">
+              <mat-label>LinkedIn Connections</mat-label>
+              <input matInput type="number" formControlName="connections">
+              <mat-icon matSuffix>people</mat-icon>
+            </mat-form-field>
+
+            <div class="form-actions">
+              <button mat-button type="button" (click)="toggleEditTargets()">Cancel</button>
+              <button mat-flat-button color="primary" type="submit" [disabled]="targetsForm.invalid">Save Changes</button>
+            </div>
+          </form>
+        </mat-card-content>
+      </mat-card>
+    }
+
+    <!-- Follow Up Alert -->
+    @if (summary()!.followUpsDue.total > 0) {
+      <div class="alert-banner card-span-all">
+        <div class="alert-content">
+          <mat-icon class="alert-icon">notifications_active</mat-icon>
+          <div class="alert-text">
+            <strong>Attention:</strong> You have <strong>{{ summary()!.followUpsDue.total }}</strong> pending follow-ups due today!
+            ({{ summary()!.followUpsDue.applications }} job applications, {{ summary()!.followUpsDue.outreach }} outreach emails, {{ summary()!.followUpsDue.networking }} networking, {{ summary()!.followUpsDue.custom }} custom reminders)
+          </div>
+        </div>
+        <button mat-flat-button routerLink="/followups" class="alert-btn">
+          Go to Follow-Up Center
+          <mat-icon>arrow_forward</mat-icon>
+        </button>
+      </div>
+    }
+
+    <!-- Daily Progress Cards -->
+    <mat-card class="stat-card target-card">
+      <div class="target-header">
+        <span class="card-subtitle">LinkedIn Applications</span>
+        <mat-icon class="icon-bg blue">work</mat-icon>
+      </div>
+      <div class="target-progress-txt">
+        <span class="huge-number">{{ summary()!.today.applications }}</span>
+        <span class="target-denom">/ {{ summary()!.targets.applications }} today</span>
+      </div>
+      <div class="progress-bar-container">
+        <mat-progress-bar mode="determinate" [value]="calcPercent(summary()!.today.applications, summary()!.targets.applications)" class="progress-blue"></mat-progress-bar>
+        <span class="percent-txt">{{ calcPercent(summary()!.today.applications, summary()!.targets.applications) }}%</span>
+      </div>
+    </mat-card>
+
+    <mat-card class="stat-card target-card">
+      <div class="target-header">
+        <span class="card-subtitle">Startup Outreach Emails</span>
+        <mat-icon class="icon-bg purple">send</mat-icon>
+      </div>
+      <div class="target-progress-txt">
+        <span class="huge-number">{{ summary()!.today.outreach }}</span>
+        <span class="target-denom">/ {{ summary()!.targets.outreach }} today</span>
+      </div>
+      <div class="progress-bar-container">
+        <mat-progress-bar mode="determinate" [value]="calcPercent(summary()!.today.outreach, summary()!.targets.outreach)" class="progress-purple"></mat-progress-bar>
+        <span class="percent-txt">{{ calcPercent(summary()!.today.outreach, summary()!.targets.outreach) }}%</span>
+      </div>
+    </mat-card>
+
+    <mat-card class="stat-card target-card">
+      <div class="target-header">
+        <span class="card-subtitle">LinkedIn Networking</span>
+        <mat-icon class="icon-bg green">people</mat-icon>
+      </div>
+      <div class="target-progress-txt">
+        <span class="huge-number">{{ summary()!.today.connections }}</span>
+        <span class="target-denom">/ {{ summary()!.targets.connections }} today</span>
+      </div>
+      <div class="progress-bar-container">
+        <mat-progress-bar mode="determinate" [value]="calcPercent(summary()!.today.connections, summary()!.targets.connections)" class="progress-green"></mat-progress-bar>
+        <span class="percent-txt">{{ calcPercent(summary()!.today.connections, summary()!.targets.connections) }}%</span>
+      </div>
+    </mat-card>
+
+    <!-- Period Summaries -->
+    <mat-card class="stat-card period-card">
+      <mat-card-header>
+        <mat-card-title>Weekly Summary</mat-card-title>
+      </mat-card-header>
+      <mat-card-content class="period-list">
+        <div class="period-item">
+          <span class="label">Applications:</span>
+          <span class="value">{{ summary()!.week.applications }}</span>
+        </div>
+        <mat-progress-bar mode="determinate" [value]="calcPercent(summary()!.week.applications, summary()!.targets.applications * 5)" class="mini-bar blue-bar"></mat-progress-bar>
+        
+        <div class="period-item">
+          <span class="label">Startup Outreaches:</span>
+          <span class="value">{{ summary()!.week.outreach }}</span>
+        </div>
+        <mat-progress-bar mode="determinate" [value]="calcPercent(summary()!.week.outreach, summary()!.targets.outreach * 5)" class="mini-bar purple-bar"></mat-progress-bar>
+
+        <div class="period-item">
+          <span class="label">LinkedIn Connections:</span>
+          <span class="value">{{ summary()!.week.connections }}</span>
+        </div>
+        <mat-progress-bar mode="determinate" [value]="calcPercent(summary()!.week.connections, summary()!.targets.connections * 5)" class="mini-bar green-bar"></mat-progress-bar>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="stat-card period-card">
+      <mat-card-header>
+        <mat-card-title>Monthly Summary</mat-card-title>
+      </mat-card-header>
+      <mat-card-content class="period-list">
+        <div class="period-item">
+          <span class="label">Applications:</span>
+          <span class="value">{{ summary()!.month.applications }}</span>
+        </div>
+        <mat-progress-bar mode="determinate" [value]="calcPercent(summary()!.month.applications, summary()!.targets.applications * 20)" class="mini-bar blue-bar"></mat-progress-bar>
+
+        <div class="period-item">
+          <span class="label">Startup Outreaches:</span>
+          <span class="value">{{ summary()!.month.outreach }}</span>
+        </div>
+        <mat-progress-bar mode="determinate" [value]="calcPercent(summary()!.month.outreach, summary()!.targets.outreach * 20)" class="mini-bar purple-bar"></mat-progress-bar>
+
+        <div class="period-item">
+          <span class="label">LinkedIn Connections:</span>
+          <span class="value">{{ summary()!.month.connections }}</span>
+        </div>
+        <mat-progress-bar mode="determinate" [value]="calcPercent(summary()!.month.connections, summary()!.targets.connections * 20)" class="mini-bar green-bar"></mat-progress-bar>
+      </mat-card-content>
+    </mat-card>
+  </div>
+}

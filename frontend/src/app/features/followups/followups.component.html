@@ -1,0 +1,182 @@
+<div class="page-header">
+  <div>
+    <h1>Follow-Up Center</h1>
+    <p class="subtitle">Quick actions for aged applications, pending outreaches, and custom reminders</p>
+  </div>
+  <button mat-flat-button class="gradient-btn" (click)="toggleAddCustom()">
+    <mat-icon>{{ isAddingCustom() ? 'close' : 'add' }}</mat-icon>
+    {{ isAddingCustom() ? 'Close' : 'Add Reminder' }}
+  </button>
+</div>
+
+@if (isAddingCustom()) {
+  <mat-card class="custom-reminder-form-card">
+    <mat-card-header>
+      <mat-card-title>Create Custom Reminder</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <form [formGroup]="customForm" (ngSubmit)="saveCustom()" class="reminder-form">
+        <mat-form-field appearance="outline" class="col-span-2">
+          <mat-label>Reminder Title</mat-label>
+          <input matInput formControlName="title" placeholder="e.g. Call recruiter at TechCorp">
+          @if (customForm.get('title')?.hasError('required')) {
+            <mat-error>Title is required</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Due Date</mat-label>
+          <input matInput type="date" formControlName="dueDate">
+          @if (customForm.get('dueDate')?.hasError('required')) {
+            <mat-error>Due date is required</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="col-span-2">
+          <mat-label>Description / Notes</mat-label>
+          <textarea matInput formControlName="description" rows="2" placeholder="Detail notes, phone numbers, context..."></textarea>
+        </mat-form-field>
+
+        <div class="form-actions">
+          <button mat-button type="button" (click)="toggleAddCustom()">Cancel</button>
+          <button mat-flat-button color="primary" type="submit" [disabled]="customForm.invalid">Add Reminder</button>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
+}
+
+@if (isLoading()) {
+  <div class="loading-overlay">
+    <div class="glow-spinner"></div>
+    <span class="loading-text">Loading reminders...</span>
+  </div>
+} @else if (followUps()) {
+  <div class="followups-layout">
+    
+    <!-- Left Column: Automatic reminders -->
+    <div class="auto-reminders-section">
+      
+      <!-- 1. Applications -->
+      <h3 class="section-title">
+        <mat-icon class="sec-icon blue">work</mat-icon>
+        Aged Applications (Older than 5 Days)
+      </h3>
+      @if (followUps()!.jobs.length === 0) {
+        <div class="empty-state">No aged applications require immediate follow-up.</div>
+      } @else {
+        <div class="reminder-cards-grid">
+          @for (item of followUps()!.jobs; track item.id) {
+            <mat-card class="reminder-item-card">
+              <div class="card-top">
+                <span class="days-ago-badge red-badge">{{ item.daysAgo }} days ago</span>
+                <span class="meta-date">{{ item.date | date:'shortDate' }}</span>
+              </div>
+              <h4 class="reminder-item-title">{{ item.title }}</h4>
+              <p class="reminder-notes">{{ item.source.notes || 'No notes added.' }}</p>
+              <div class="card-actions">
+                <button mat-stroked-button class="action-btn-blue" (click)="markJobInterview(item.id, item.source.companyName)">
+                  <mat-icon>calendar_today</mat-icon>
+                  Interview Scheduled
+                </button>
+              </div>
+            </mat-card>
+          }
+        </div>
+      }
+
+      <!-- 2. Outreach -->
+      <h3 class="section-title mt-4">
+        <mat-icon class="sec-icon purple">send</mat-icon>
+        Unanswered Startup Outreaches (Older than 7 Days)
+      </h3>
+      @if (followUps()!.outreach.length === 0) {
+        <div class="empty-state">No startup outreach emails require follow-up.</div>
+      } @else {
+        <div class="reminder-cards-grid">
+          @for (item of followUps()!.outreach; track item.id) {
+            <mat-card class="reminder-item-card">
+              <div class="card-top">
+                <span class="days-ago-badge purple-badge">{{ item.daysAgo }} days ago</span>
+                <span class="meta-date">{{ item.date | date:'shortDate' }}</span>
+              </div>
+              <h4 class="reminder-item-title">{{ item.title }}</h4>
+              <p class="reminder-notes">
+                <strong>Founder:</strong> {{ item.source.founderName || 'Founder' }} <br>
+                <strong>Email:</strong> {{ item.source.contactEmail }}
+              </p>
+              <div class="card-actions">
+                <button mat-stroked-button class="action-btn-purple" (click)="markOutreachReplied(item.id, item.source.startupName)">
+                  <mat-icon>check_circle</mat-icon>
+                  Mark Replied
+                </button>
+              </div>
+            </mat-card>
+          }
+        </div>
+      }
+
+      <!-- 3. Networking -->
+      <h3 class="section-title mt-4">
+        <mat-icon class="sec-icon green">people</mat-icon>
+        Unanswered LinkedIn Requests (Older than 5 Days)
+      </h3>
+      @if (followUps()!.networking.length === 0) {
+        <div class="empty-state">No unanswered connection requests require follow-up.</div>
+      } @else {
+        <div class="reminder-cards-grid">
+          @for (item of followUps()!.networking; track item.id) {
+            <mat-card class="reminder-item-card">
+              <div class="card-top">
+                <span class="days-ago-badge green-badge">{{ item.daysAgo }} days ago</span>
+                <span class="meta-date">{{ item.date | date:'shortDate' }}</span>
+              </div>
+              <h4 class="reminder-item-title">{{ item.title }}</h4>
+              <p class="reminder-notes">
+                <strong>Contact Profile:</strong> <a [href]="item.source.linkedinProfile" target="_blank" class="linkedin-link">View Profile</a>
+              </p>
+              <div class="card-actions">
+                <button mat-stroked-button class="action-btn-green" (click)="markConnected(item.id, item.source.personName)">
+                  <mat-icon>link</mat-icon>
+                  Connected
+                </button>
+              </div>
+            </mat-card>
+          }
+        </div>
+      }
+    </div>
+
+    <!-- Right Column: Custom tasks list -->
+    <div class="custom-reminders-section">
+      <h3 class="section-title">
+        <mat-icon class="sec-icon yellow">notifications</mat-icon>
+        Custom Reminders
+      </h3>
+      
+      @if (followUps()!.custom.length === 0) {
+        <div class="empty-state">No active custom reminders. Create one above!</div>
+      } @else {
+        <div class="custom-list">
+          @for (rem of followUps()!.custom; track rem._id) {
+            <mat-card class="custom-reminder-card">
+              <div class="reminder-left">
+                <mat-checkbox [checked]="rem.completed" (change)="completeCustom(rem._id!, $event.checked)" color="primary"></mat-checkbox>
+                <div class="reminder-text">
+                  <div class="rem-title" [class.line-through]="rem.completed">{{ rem.title }}</div>
+                  @if (rem.description) {
+                    <div class="rem-desc">{{ rem.description }}</div>
+                  }
+                  <div class="rem-due">Due: {{ rem.dueDate | date:'mediumDate' }}</div>
+                </div>
+              </div>
+              <button mat-icon-button (click)="deleteCustom(rem._id!)" class="delete-btn" title="Delete">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </mat-card>
+          }
+        </div>
+      }
+    </div>
+  </div>
+}

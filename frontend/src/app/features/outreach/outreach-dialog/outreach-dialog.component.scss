@@ -1,0 +1,84 @@
+// Shared dialog styles - duplicated to avoid SCSS @import deprecation
+.dialog-title {
+  background-color: #111827;
+  color: #ffffff;
+  margin: 0;
+  padding: 20px 24px;
+  font-weight: 700;
+  border-bottom: 1px solid #1f2937;
+  line-height: 1.35;
+}
+
+.dialog-content {
+  background-color: #111827;
+  padding: 24px !important;
+  color: #ffffff;
+}
+
+.dialog-actions {
+  background-color: #111827;
+  padding: 16px 24px !important;
+  border-top: 1px solid #1f2937;
+  margin: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-end !important;
+  gap: 12px !important;
+
+  @media (max-width: 599px) {
+    flex-direction: column-reverse;
+
+    button {
+      width: 100%;
+    }
+  }
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+  width: 100%;
+  max-width: 600px;
+  box-sizing: border-box;
+
+  @media (min-width: 600px) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.col-span-2 {
+  @media (min-width: 600px) {
+    grid-column: span 2;
+  }
+}
+
+::ng-deep {
+  .mat-mdc-dialog-container .mdc-dialog__surface {
+    background-color: #111827 !important;
+    border: 1px solid #374151 !important;
+    border-radius: 12px !important;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5) !important;
+    overflow: hidden !important;
+  }
+  
+  .mat-mdc-select-panel {
+    background-color: #1f2937 !important;
+    border: 1px solid #374151 !important;
+  }
+  
+  .mat-mdc-option {
+    color: #e5e7eb !important;
+    
+    &:hover:not(.mdc-list-item--disabled) {
+      background-color: #374151 !important;
+    }
+    
+    &.mdc-list-item--selected:not(.mdc-list-item--disabled) {
+      background-color: rgba(59, 130, 246, 0.2) !important;
+      .mdc-list-item__primary-text {
+        color: #3b82f6 !important;
+      }
+    }
+  }
+}

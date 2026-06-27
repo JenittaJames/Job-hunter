@@ -1,0 +1,257 @@
+@import '@angular/material/prebuilt-themes/pink-bluegrey.css';
+
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+
+html, body {
+  height: 100%;
+  margin: 0;
+  font-family: 'Plus Jakarta Sans', 'Outfit', sans-serif;
+  background-color: #0b0f19;
+  color: #ffffff;
+  overflow: hidden;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+button,
+a,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+/* Custom Scrollbars */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #0b0f19;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #1f2937;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #374151;
+}
+
+/* Material overrides for forms */
+.mat-mdc-form-field {
+  width: 100%;
+  
+  .mdc-text-field--outlined {
+    --mdc-outlined-text-field-container-shape: 8px;
+  }
+}
+
+.mat-mdc-button,
+.mat-mdc-raised-button,
+.mat-mdc-unelevated-button,
+.mat-mdc-outlined-button {
+  .mdc-button__label {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-width: 0;
+  }
+
+  mat-icon {
+    margin: 0 !important;
+    flex: 0 0 auto;
+  }
+}
+
+.mat-mdc-icon-button {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex: 0 0 auto;
+}
+
+.mat-mdc-card-header {
+  padding: 0 !important;
+}
+
+.mat-mdc-card-content {
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+
+.mat-mdc-paginator-container,
+.mat-mdc-paginator-range-actions,
+.mat-mdc-paginator-page-size {
+  align-items: center !important;
+}
+
+.page-header {
+  display: flex !important;
+  align-items: flex-start !important;
+  justify-content: space-between !important;
+  gap: 16px 24px !important;
+  width: 100% !important;
+  min-width: 0 !important;
+
+  > div {
+    min-width: 0;
+  }
+
+  h1,
+  .subtitle {
+    overflow-wrap: anywhere;
+  }
+
+  .gradient-btn {
+    flex: 0 0 auto;
+  }
+}
+
+.gradient-btn {
+  min-height: 40px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 8px !important;
+  text-align: center !important;
+  line-height: 1.2 !important;
+}
+
+.filter-card,
+.table-card,
+.custom-reminder-form-card,
+.metric-card,
+.chart-card,
+.reminder-item-card,
+.custom-reminder-card {
+  width: 100% !important;
+  min-width: 0 !important;
+}
+
+.filter-grid,
+.form-grid,
+.reminder-form,
+.metrics-row,
+.charts-grid,
+.reminder-cards-grid,
+.dashboard-grid {
+  min-width: 0 !important;
+
+  > * {
+    min-width: 0;
+  }
+}
+
+.filter-actions {
+  align-self: stretch;
+
+  button {
+    min-height: 48px;
+    white-space: nowrap;
+  }
+}
+
+.table-container {
+  width: 100% !important;
+  overflow-x: auto !important;
+}
+
+.dark-table {
+  min-width: 760px;
+  table-layout: auto;
+
+  th.mat-mdc-header-cell,
+  td.mat-mdc-cell {
+    vertical-align: middle !important;
+  }
+}
+
+.status-badge {
+  line-height: 1.2 !important;
+  vertical-align: middle !important;
+  white-space: nowrap;
+}
+
+.actions-header,
+.actions-cell {
+  width: 112px;
+}
+
+.actions-cell {
+  button {
+    margin-left: 2px;
+  }
+}
+
+.company-link {
+  max-width: 100%;
+  min-width: 0;
+  vertical-align: middle;
+
+  .link-icon {
+    flex: 0 0 auto;
+  }
+}
+
+@media (max-width: 767px) {
+  .page-header {
+    flex-direction: column !important;
+    align-items: stretch !important;
+
+    .gradient-btn {
+      width: 100%;
+    }
+  }
+
+  .filter-actions {
+    button {
+      width: 100%;
+    }
+  }
+}
+
+@media (max-width: 599px) {
+  .page-header {
+    margin-bottom: 18px !important;
+
+    h1 {
+      font-size: 1.45rem !important;
+      line-height: 1.2 !important;
+    }
+
+    .subtitle {
+      line-height: 1.45 !important;
+    }
+  }
+
+  .filter-card {
+    padding: 16px !important;
+  }
+
+  .dark-paginator .mat-mdc-paginator-container {
+    justify-content: center !important;
+    padding: 8px !important;
+  }
+}
+
+.mat-mdc-card {
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15) !important;
+  border: 1px solid #1f2937 !important;
+  background-color: #111827 !important;
+}
+
+/* Page transitions */
+.page-container {
+  animation: pageFade 0.25s ease-out;
+}
+
+@keyframes pageFade {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}

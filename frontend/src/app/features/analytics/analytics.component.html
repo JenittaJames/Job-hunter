@@ -1,0 +1,121 @@
+<div class="page-header">
+  <div>
+    <h1>Analytics & Insights</h1>
+    <p class="subtitle">Analyze your application funnels, outreach conversions, and networking progress</p>
+  </div>
+</div>
+
+@if (isLoading()) {
+  <div class="loading-overlay">
+    <div class="glow-spinner"></div>
+    <span class="loading-text">Generating analytics data...</span>
+  </div>
+} @else if (analytics()) {
+  <div class="analytics-layout">
+    
+    <!-- 1. Key Metrics Cards -->
+    <div class="metrics-row">
+      <mat-card class="metric-card">
+        <div class="metric-header">
+          <span class="m-title">Total Applications</span>
+          <mat-icon class="m-icon blue">work</mat-icon>
+        </div>
+        <div class="m-val">{{ analytics()!.metrics.totalApplications }}</div>
+        <div class="m-sub">Offer rate: {{ analytics()!.metrics.offerRate }}%</div>
+      </mat-card>
+
+      <mat-card class="metric-card">
+        <div class="metric-header">
+          <span class="m-title">Outreach Emails</span>
+          <mat-icon class="m-icon purple">send</mat-icon>
+        </div>
+        <div class="m-val">{{ analytics()!.metrics.totalOutreach }}</div>
+        <div class="m-sub">Response rate: {{ analytics()!.metrics.responseRate }}%</div>
+      </mat-card>
+
+      <mat-card class="metric-card">
+        <div class="metric-header">
+          <span class="m-title">LinkedIn Connections</span>
+          <mat-icon class="m-icon green">people</mat-icon>
+        </div>
+        <div class="m-val">{{ analytics()!.metrics.totalConnections }}</div>
+        <div class="m-sub">Acceptance rate: {{ analytics()!.metrics.networkingRate }}%</div>
+      </mat-card>
+
+      <mat-card class="metric-card highlight-metric">
+        <div class="metric-header">
+          <span class="m-title">Interview Conversion</span>
+          <mat-icon class="m-icon yellow font-bold">trending_up</mat-icon>
+        </div>
+        <div class="m-val yellow-text">{{ analytics()!.metrics.interviewRate }}%</div>
+        <div class="m-sub white-text">{{ analytics()!.metrics.interviews }} stages reached</div>
+      </mat-card>
+    </div>
+
+    <!-- 2. Charts Section -->
+    <div class="charts-grid">
+      
+      <!-- Daily Activity Line Chart -->
+      <mat-card class="chart-card card-span-2">
+        <mat-card-header>
+          <mat-card-title>Activity Timeline (Last 14 Days)</mat-card-title>
+          <div class="chart-legend">
+            <span class="legend-item"><span class="legend-dot blue-dot"></span>Applications</span>
+            <span class="legend-item"><span class="legend-dot purple-dot"></span>Outreach</span>
+            <span class="legend-item"><span class="legend-dot green-dot"></span>Connections</span>
+          </div>
+        </mat-card-header>
+        <mat-card-content class="svg-container">
+          <svg viewBox="0 0 800 250" class="timeline-svg">
+            <!-- Y-Axis Gridlines & Labels -->
+            @for (line of yGridLines(); track line.value) {
+              <line x1="30" [attr.y1]="line.y" [attr.x2]="chartWidth - 30" [attr.y2]="line.y" class="grid-line" />
+              <text x="5" [attr.y]="line.y + 4" class="grid-label">{{ line.value }}</text>
+            }
+
+            <!-- Data Lines -->
+            @if (svgPoints().apps) {
+              <path [attr.d]="svgPoints().apps" class="chart-path path-blue" />
+            }
+            @if (svgPoints().outreach) {
+              <path [attr.d]="svgPoints().outreach" class="chart-path path-purple" />
+            }
+            @if (svgPoints().connections) {
+              <path [attr.d]="svgPoints().connections" class="chart-path path-green" />
+            }
+
+            <!-- X-Axis Labels -->
+            @for (x of svgPoints().xGrid; track $index) {
+              <text [attr.x]="x" [attr.y]="chartHeight - 8" text-anchor="middle" class="axis-label-x">
+                {{ analytics()!.dailyTimeline[$index].label }}
+              </text>
+            }
+          </svg>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Application Funnel breakdown -->
+      <mat-card class="chart-card">
+        <mat-card-header>
+          <mat-card-title>Application Pipelines</mat-card-title>
+        </mat-card-header>
+        <mat-card-content class="funnel-container">
+          @for (item of getStatusKeys(analytics()!.statusBreakdown); track item.name) {
+            <div class="funnel-row">
+              <div class="funnel-meta">
+                <span class="funnel-name">{{ item.name }}</span>
+                <span class="funnel-count">{{ item.value }}</span>
+              </div>
+              <div class="funnel-bar-bg">
+                <div class="funnel-bar-fill" 
+                     [style.width.%]="getStatusPercent(item.value)"
+                     [class]="item.name.replace(' ', '-').toLowerCase()">
+                </div>
+              </div>
+            </div>
+          }
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+}
