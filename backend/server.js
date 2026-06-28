@@ -1,5 +1,8 @@
 const express = require('express');
 const cors = require('cors');
+const helmet = require('helmet');
+const mongoSanitize = require('express-mongo-sanitize');
+const rateLimit = require('express-rate-limit');
 const dotenv = require('dotenv');
 const connectDB = require('./config/db');
 const errorHandler = require('./middleware/error');
@@ -15,8 +18,25 @@ const app = express();
 // Body parser
 app.use(express.json());
 
-// Enable CORS
-app.use(cors());
+// Set security headers
+app.use(helmet());
+
+// Prevent NoSQL injections
+app.use(mongoSanitize());
+
+// Enable CORS with strict origins
+app.use(cors({
+  origin: ['http://localhost:4200', 'https://job-hunter-ymhr.onrender.com'],
+  credentials: true
+}));
+
+// Rate limiting for auth routes
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 mins
+  max: 100 // limit each IP to 100 requests per windowMs
+});
+app.use('/api/auth', authLimiter);
+
 
 // Mount routers
 app.use('/api/auth', require('./routes/authRoutes'));

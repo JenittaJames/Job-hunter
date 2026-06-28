@@ -1,4 +1,4 @@
 export const environment = {
   production: false,
-  apiBaseUrl: 'https://job-hunter-ymhr.onrender.com'
+  apiBaseUrl: 'http://localhost:5000/api'
 };
