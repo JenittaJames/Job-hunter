@@ -26,7 +26,7 @@ app.use(mongoSanitize());
 
 // Enable CORS with strict origins
 app.use(cors({
-  origin: ['http://localhost:4200', 'https://job-hunter-ymhr.onrender.com', 'https://job-hunter-six-weld.vercel.app'],
+  origin: ['http://localhost:4200', 'https://job-hunter-ymhr.onrender.com', 'https://job-hunter2026.vercel.app/'],
   credentials: true
 }));
 
