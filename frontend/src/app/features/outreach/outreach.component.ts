@@ -14,6 +14,7 @@ import { DatePipe, NgClass } from '@angular/common';
 import { OutreachService } from '../../core/services/outreach.service';
 import { StartupOutreach } from '../../core/models/outreach.model';
 import { OutreachDialogComponent } from './outreach-dialog/outreach-dialog.component';
+import { ConfirmDialogComponent } from '../../shared/components/confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'app-outreach',
@@ -147,17 +148,27 @@ export class OutreachComponent implements OnInit {
   }
 
   deleteOutreach(outreach: StartupOutreach) {
-    if (confirm(`Are you sure you want to delete outreach record for ${outreach.startupName}?`)) {
-      this.outreachService.deleteOutreach(outreach._id!).subscribe({
-        next: () => {
-          this.snackBar.open('Outreach record deleted successfully!', 'Close', { duration: 3000 });
-          this.loadOutreaches();
-        },
-        error: () => {
-          this.snackBar.open('Failed to delete outreach record', 'Close', { duration: 3000 });
-        }
-      });
-    }
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      width: '400px',
+      data: {
+        title: 'Delete Outreach',
+        message: `Are you sure you want to delete outreach record for ${outreach.startupName}?`
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.outreachService.deleteOutreach(outreach._id!).subscribe({
+          next: () => {
+            this.snackBar.open('Outreach record deleted successfully!', 'Close', { duration: 3000 });
+            this.loadOutreaches();
+          },
+          error: () => {
+            this.snackBar.open('Failed to delete outreach record', 'Close', { duration: 3000 });
+          }
+        });
+      }
+    });
   }
 
   getResponseStatusClass(status: string): string {

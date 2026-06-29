@@ -5,13 +5,15 @@ const {
   loginUser,
   getMe,
   refreshToken,
-  updateTargets
+  updateTargets,
+  logoutUser
 } = require('../controllers/authController');
 const { protect } = require('../middleware/auth');
 
 router.post('/register', registerUser);
 router.post('/login', loginUser);
 router.post('/refresh', refreshToken);
+router.post('/logout', logoutUser);
 router.get('/me', protect, getMe);
 router.put('/targets', protect, updateTargets);
 

@@ -7,12 +7,14 @@ import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { DatePipe } from '@angular/common';
 import { FollowUpService } from '../../core/services/followup.service';
 import { JobService } from '../../core/services/job.service';
 import { OutreachService } from '../../core/services/outreach.service';
 import { NetworkingService } from '../../core/services/networking.service';
 import { FollowUp, FollowUpResponseData } from '../../core/models/followup.model';
+import { ConfirmDialogComponent } from '../../shared/components/confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'app-followups',
@@ -27,7 +29,8 @@ import { FollowUp, FollowUpResponseData } from '../../core/models/followup.model
     MatInputModule,
     MatFormFieldModule,
     MatCheckboxModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    MatDialogModule
   ],
   templateUrl: './followups.component.html',
   styleUrl: './followups.component.scss'
@@ -39,6 +42,7 @@ export class FollowupsComponent implements OnInit {
   private networkingService = inject(NetworkingService);
   private fb = inject(FormBuilder);
   private snackBar = inject(MatSnackBar);
+  private dialog = inject(MatDialog);
 
   followUps = signal<FollowUpResponseData | null>(null);
   isLoading = signal(true);
@@ -127,14 +131,24 @@ export class FollowupsComponent implements OnInit {
 
   // Delete Custom Reminder
   deleteCustom(id: string) {
-    if (confirm('Delete this reminder?')) {
-      this.followUpService.deleteFollowUp(id).subscribe({
-        next: () => {
-          this.snackBar.open('Reminder deleted!', 'Close', { duration: 2000 });
-          this.loadFollowUps();
-        }
-      });
-    }
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      width: '400px',
+      data: {
+        title: 'Delete Reminder',
+        message: 'Are you sure you want to delete this reminder?'
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.followUpService.deleteFollowUp(id).subscribe({
+          next: () => {
+            this.snackBar.open('Reminder deleted!', 'Close', { duration: 2000 });
+            this.loadFollowUps();
+          }
+        });
+      }
+    });
   }
 
   toggleAddCustom() {

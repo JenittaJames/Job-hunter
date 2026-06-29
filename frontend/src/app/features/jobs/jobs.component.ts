@@ -14,6 +14,7 @@ import { DatePipe, NgClass } from '@angular/common';
 import { JobService } from '../../core/services/job.service';
 import { JobApplication } from '../../core/models/job.model';
 import { JobDialogComponent } from './job-dialog/job-dialog.component';
+import { ConfirmDialogComponent } from '../../shared/components/confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'app-jobs',
@@ -149,17 +150,27 @@ export class JobsComponent implements OnInit {
   }
 
   deleteJob(job: JobApplication) {
-    if (confirm(`Are you sure you want to delete application for ${job.jobTitle} at ${job.companyName}?`)) {
-      this.jobService.deleteJob(job._id!).subscribe({
-        next: () => {
-          this.snackBar.open('Job application deleted successfully!', 'Close', { duration: 3000 });
-          this.loadJobs();
-        },
-        error: () => {
-          this.snackBar.open('Failed to delete job application', 'Close', { duration: 3000 });
-        }
-      });
-    }
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      width: '400px',
+      data: {
+        title: 'Delete Application',
+        message: `Are you sure you want to delete the application for ${job.jobTitle} at ${job.companyName}?`
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.jobService.deleteJob(job._id!).subscribe({
+          next: () => {
+            this.snackBar.open('Job application deleted successfully!', 'Close', { duration: 3000 });
+            this.loadJobs();
+          },
+          error: () => {
+            this.snackBar.open('Failed to delete job application', 'Close', { duration: 3000 });
+          }
+        });
+      }
+    });
   }
 
   // Get status class for styling

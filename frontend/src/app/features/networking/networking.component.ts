@@ -14,6 +14,7 @@ import { DatePipe } from '@angular/common';
 import { NetworkingService } from '../../core/services/networking.service';
 import { LinkedInConnection } from '../../core/models/networking.model';
 import { NetworkingDialogComponent } from './networking-dialog/networking-dialog.component';
+import { ConfirmDialogComponent } from '../../shared/components/confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'app-networking',
@@ -149,17 +150,27 @@ export class NetworkingComponent implements OnInit {
   }
 
   deleteConnection(connection: LinkedInConnection) {
-    if (confirm(`Are you sure you want to delete ${connection.personName} from your network list?`)) {
-      this.networkingService.deleteConnection(connection._id!).subscribe({
-        next: () => {
-          this.snackBar.open('Contact deleted successfully!', 'Close', { duration: 3000 });
-          this.loadConnections();
-        },
-        error: () => {
-          this.snackBar.open('Failed to delete contact', 'Close', { duration: 3000 });
-        }
-      });
-    }
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      width: '400px',
+      data: {
+        title: 'Delete Connection',
+        message: `Are you sure you want to delete ${connection.personName} from your network list?`
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.networkingService.deleteConnection(connection._id!).subscribe({
+          next: () => {
+            this.snackBar.open('Contact deleted successfully!', 'Close', { duration: 3000 });
+            this.loadConnections();
+          },
+          error: () => {
+            this.snackBar.open('Failed to delete contact', 'Close', { duration: 3000 });
+          }
+        });
+      }
+    });
   }
 
   // Quick Action: toggle acceptance state

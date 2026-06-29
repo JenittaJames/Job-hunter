@@ -5,16 +5,10 @@ import { catchError, switchMap, throwError } from 'rxjs';
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const authService = inject(AuthService);
-  const token = authService.getAccessToken();
 
-  let authReq = req;
-  if (token) {
-    authReq = req.clone({
-      setHeaders: {
-        Authorization: `Bearer ${token}`
-      }
-    });
-  }
+  const authReq = req.clone({
+    withCredentials: true
+  });
 
   return next(authReq).pipe(
     catchError((error: HttpErrorResponse) => {
@@ -23,20 +17,18 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
         error.status === 401 &&
         !req.url.includes('/api/auth/login') &&
         !req.url.includes('/api/auth/register') &&
-        !req.url.includes('/api/auth/refresh')
+        !req.url.includes('/api/auth/refresh') &&
+        !req.url.includes('/api/auth/logout')
       ) {
         return authService.refreshToken().pipe(
           switchMap(() => {
-            const newToken = authService.getAccessToken();
+            // The browser will automatically send the new cookie
             const retryReq = req.clone({
-              setHeaders: {
-                Authorization: `Bearer ${newToken}`
-              }
+              withCredentials: true
             });
             return next(retryReq);
           }),
           catchError((refreshErr) => {
-            authService.logout();
             return throwError(() => refreshErr);
           })
         );

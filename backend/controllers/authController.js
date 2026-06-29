@@ -33,10 +33,17 @@ const registerUser = async (req, res, next) => {
       const accessToken = generateAccessToken(user._id);
       const refreshToken = generateRefreshToken(user._id);
 
+      const cookieOptions = {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'strict',
+      };
+      
+      res.cookie('jwt', accessToken, { ...cookieOptions, maxAge: 24 * 60 * 60 * 1000 });
+      res.cookie('jwt_refresh', refreshToken, { ...cookieOptions, maxAge: 7 * 24 * 60 * 60 * 1000 });
+
       res.status(201).json({
         success: true,
-        accessToken,
-        refreshToken,
         user: {
           _id: user._id,
           name: user.name,
@@ -72,10 +79,17 @@ const loginUser = async (req, res, next) => {
       const accessToken = generateAccessToken(user._id);
       const refreshToken = generateRefreshToken(user._id);
 
+      const cookieOptions = {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'strict',
+      };
+      
+      res.cookie('jwt', accessToken, { ...cookieOptions, maxAge: 24 * 60 * 60 * 1000 });
+      res.cookie('jwt_refresh', refreshToken, { ...cookieOptions, maxAge: 7 * 24 * 60 * 60 * 1000 });
+
       res.json({
         success: true,
-        accessToken,
-        refreshToken,
         user: {
           _id: user._id,
           name: user.name,
@@ -111,7 +125,7 @@ const getMe = async (req, res, next) => {
 // @access  Public
 const refreshToken = async (req, res, next) => {
   try {
-    const { refreshToken } = req.body;
+    const refreshToken = req.cookies.jwt_refresh;
 
     if (!refreshToken) {
       res.status(401);
@@ -136,10 +150,17 @@ const refreshToken = async (req, res, next) => {
     const accessToken = generateAccessToken(user._id);
     const newRefreshToken = generateRefreshToken(user._id);
 
+    const cookieOptions = {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
+    };
+    
+    res.cookie('jwt', accessToken, { ...cookieOptions, maxAge: 24 * 60 * 60 * 1000 });
+    res.cookie('jwt_refresh', newRefreshToken, { ...cookieOptions, maxAge: 7 * 24 * 60 * 60 * 1000 });
+
     res.json({
-      success: true,
-      accessToken,
-      refreshToken: newRefreshToken
+      success: true
     });
   } catch (error) {
     next(error);
@@ -180,10 +201,31 @@ const updateTargets = async (req, res, next) => {
   }
 };
 
+// @desc    Logout user / clear cookie
+// @route   POST /api/auth/logout
+// @access  Public
+const logoutUser = async (req, res, next) => {
+  try {
+    const cookieOptions = {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
+    };
+    
+    res.cookie('jwt', '', { ...cookieOptions, expires: new Date(0) });
+    res.cookie('jwt_refresh', '', { ...cookieOptions, expires: new Date(0) });
+
+    res.status(200).json({ success: true, message: 'Logged out successfully' });
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   registerUser,
   loginUser,
   getMe,
   refreshToken,
-  updateTargets
+  updateTargets,
+  logoutUser
 };

@@ -25,9 +25,8 @@ export class AuthService {
   }
 
   private loadUserFromStorage() {
-    const token = this.getAccessToken();
     const storedUser = localStorage.getItem('user');
-    if (token && storedUser) {
+    if (storedUser) {
       try {
         this.userSignal.set(JSON.parse(storedUser));
       } catch (e) {
@@ -49,18 +48,9 @@ export class AuthService {
   }
 
   refreshToken(): Observable<any> {
-    const refreshToken = this.getRefreshToken();
-    if (!refreshToken) {
-      this.logout();
-      return throwError(() => new Error('No refresh token'));
-    }
-
-    return this.http.post<any>(`${this.apiUrl}/refresh`, { refreshToken }).pipe(
+    return this.http.post<any>(`${this.apiUrl}/refresh`, {}, { withCredentials: true }).pipe(
       tap(res => {
-        if (res.success) {
-          localStorage.setItem('accessToken', res.accessToken);
-          localStorage.setItem('refreshToken', res.refreshToken);
-        }
+        // Cookies are updated automatically
       }),
       catchError(err => {
         this.logout();
@@ -81,25 +71,22 @@ export class AuthService {
   }
 
   logout() {
-    localStorage.removeItem('accessToken');
-    localStorage.removeItem('refreshToken');
-    localStorage.removeItem('user');
-    this.userSignal.set(null);
-    this.router.navigate(['/auth/login']);
-  }
-
-  getAccessToken(): string | null {
-    return localStorage.getItem('accessToken');
-  }
-
-  getRefreshToken(): string | null {
-    return localStorage.getItem('refreshToken');
+    this.http.post(`${this.apiUrl}/logout`, {}, { withCredentials: true }).subscribe({
+      next: () => {
+        localStorage.removeItem('user');
+        this.userSignal.set(null);
+        this.router.navigate(['/auth/login']);
+      },
+      error: () => {
+        localStorage.removeItem('user');
+        this.userSignal.set(null);
+        this.router.navigate(['/auth/login']);
+      }
+    });
   }
 
   private handleAuthSuccess(res: AuthResponse) {
     if (res.success) {
-      localStorage.setItem('accessToken', res.accessToken);
-      localStorage.setItem('refreshToken', res.refreshToken);
       localStorage.setItem('user', JSON.stringify(res.user));
       this.userSignal.set(res.user);
     }
