@@ -49,8 +49,8 @@
         
         <!-- Startup Column -->
         <ng-container matColumnDef="startupName">
-          <th mat-header-cell *matHeaderCellDef> Startup Name </th>
-          <td mat-cell *matCellDef="let out">
+          <th mat-header-cell *matHeaderCellDef> Startup </th>
+          <td mat-cell *matCellDef="let out" data-label="Startup">
             @if (out.website) {
               <a [href]="out.website" target="_blank" class="company-link">
                 {{ out.startupName }}
@@ -64,26 +64,26 @@
 
         <!-- Founder Column -->
         <ng-container matColumnDef="founderName">
-          <th mat-header-cell *matHeaderCellDef> Founder / Contact </th>
-          <td mat-cell *matCellDef="let out"> {{ out.founderName || '—' }} </td>
+          <th mat-header-cell *matHeaderCellDef> Contact Person </th>
+          <td mat-cell *matCellDef="let out" data-label="Contact Person"> {{ out.founderName || '—' }} </td>
         </ng-container>
 
         <!-- Email Column -->
         <ng-container matColumnDef="contactEmail">
           <th mat-header-cell *matHeaderCellDef> Email </th>
-          <td mat-cell *matCellDef="let out"> {{ out.contactEmail }} </td>
+          <td mat-cell *matCellDef="let out" data-label="Email"> {{ out.contactEmail }} </td>
         </ng-container>
 
         <!-- Sent Date Column -->
         <ng-container matColumnDef="emailSentDate">
-          <th mat-header-cell *matHeaderCellDef> Sent Date </th>
-          <td mat-cell *matCellDef="let out"> {{ out.emailSentDate | date:'mediumDate' }} </td>
+          <th mat-header-cell *matHeaderCellDef> Date Sent </th>
+          <td mat-cell *matCellDef="let out" data-label="Date Sent"> {{ out.emailSentDate | date:'mediumDate' }} </td>
         </ng-container>
 
         <!-- Response Status Column -->
         <ng-container matColumnDef="responseStatus">
-          <th mat-header-cell *matHeaderCellDef> Response </th>
-          <td mat-cell *matCellDef="let out">
+          <th mat-header-cell *matHeaderCellDef> Status </th>
+          <td mat-cell *matCellDef="let out" data-label="Status">
             <span class="status-badge" [ngClass]="getResponseStatusClass(out.responseStatus)">
               {{ out.responseStatus }}
             </span>
@@ -93,7 +93,7 @@
         <!-- Actions Column -->
         <ng-container matColumnDef="actions">
           <th mat-header-cell *matHeaderCellDef class="actions-header"> Actions </th>
-          <td mat-cell *matCellDef="let out" class="actions-cell">
+          <td mat-cell *matCellDef="let out" class="actions-cell" data-label="Actions">
             <button mat-icon-button (click)="openEditDialog(out)" title="Edit">
               <mat-icon class="action-icon edit">edit</mat-icon>
             </button>

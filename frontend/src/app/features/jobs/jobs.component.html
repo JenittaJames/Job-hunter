@@ -58,7 +58,7 @@
         <!-- Company Column -->
         <ng-container matColumnDef="companyName">
           <th mat-header-cell *matHeaderCellDef> Company </th>
-          <td mat-cell *matCellDef="let job">
+          <td mat-cell *matCellDef="let job" data-label="Company">
             @if (job.jobUrl) {
               <a [href]="job.jobUrl" target="_blank" class="company-link">
                 {{ job.companyName }}
@@ -73,25 +73,25 @@
         <!-- Title Column -->
         <ng-container matColumnDef="jobTitle">
           <th mat-header-cell *matHeaderCellDef> Job Title </th>
-          <td mat-cell *matCellDef="let job"> {{ job.jobTitle }} </td>
+          <td mat-cell *matCellDef="let job" data-label="Job Title"> {{ job.jobTitle }} </td>
         </ng-container>
 
         <!-- Applied Date Column -->
         <ng-container matColumnDef="appliedDate">
           <th mat-header-cell *matHeaderCellDef> Applied Date </th>
-          <td mat-cell *matCellDef="let job"> {{ job.appliedDate | date:'mediumDate' }} </td>
+          <td mat-cell *matCellDef="let job" data-label="Applied Date"> {{ job.appliedDate | date:'mediumDate' }} </td>
         </ng-container>
 
         <!-- Source Column -->
         <ng-container matColumnDef="applicationSource">
           <th mat-header-cell *matHeaderCellDef> Source </th>
-          <td mat-cell *matCellDef="let job"> {{ job.applicationSource }} </td>
+          <td mat-cell *matCellDef="let job" data-label="Source"> {{ job.applicationSource }} </td>
         </ng-container>
 
         <!-- Status Column -->
         <ng-container matColumnDef="status">
           <th mat-header-cell *matHeaderCellDef> Status </th>
-          <td mat-cell *matCellDef="let job">
+          <td mat-cell *matCellDef="let job" data-label="Status">
             <span class="status-badge" [ngClass]="getStatusClass(job.status)">
               {{ job.status }}
             </span>
@@ -101,7 +101,7 @@
         <!-- Actions Column -->
         <ng-container matColumnDef="actions">
           <th mat-header-cell *matHeaderCellDef class="actions-header"> Actions </th>
-          <td mat-cell *matCellDef="let job" class="actions-cell">
+          <td mat-cell *matCellDef="let job" class="actions-cell" data-label="Actions">
             <button mat-icon-button (click)="openEditDialog(job)" title="Edit">
               <mat-icon class="action-icon edit">edit</mat-icon>
             </button>

@@ -69,7 +69,6 @@ export class FollowupsComponent implements OnInit {
       },
       error: () => {
         this.isLoading.set(false);
-        this.snackBar.open('Failed to load follow-ups data', 'Close', { duration: 3000 });
       }
     });
   }
@@ -178,7 +177,7 @@ export class FollowupsComponent implements OnInit {
         this.loadFollowUps();
       },
       error: () => {
-        this.snackBar.open('Failed to create reminder', 'Close', { duration: 3000 });
+        this.isAddingCustom.set(false);
       }
     });
   }

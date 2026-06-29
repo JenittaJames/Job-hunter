@@ -86,7 +86,6 @@ export class JobsComponent implements OnInit {
       },
       error: () => {
         this.isLoading.set(false);
-        this.snackBar.open('Failed to load job applications', 'Close', { duration: 3000 });
       }
     });
   }
@@ -120,9 +119,7 @@ export class JobsComponent implements OnInit {
             this.snackBar.open('Job application added successfully!', 'Close', { duration: 3000 });
             this.loadJobs();
           },
-          error: () => {
-            this.snackBar.open('Failed to add job application', 'Close', { duration: 3000 });
-          }
+          error: () => {}
         });
       }
     });
@@ -141,9 +138,7 @@ export class JobsComponent implements OnInit {
             this.snackBar.open('Job application updated successfully!', 'Close', { duration: 3000 });
             this.loadJobs();
           },
-          error: () => {
-            this.snackBar.open('Failed to update job application', 'Close', { duration: 3000 });
-          }
+          error: () => {}
         });
       }
     });
@@ -165,9 +160,7 @@ export class JobsComponent implements OnInit {
             this.snackBar.open('Job application deleted successfully!', 'Close', { duration: 3000 });
             this.loadJobs();
           },
-          error: () => {
-            this.snackBar.open('Failed to delete job application', 'Close', { duration: 3000 });
-          }
+          error: () => {}
         });
       }
     });
