@@ -36,7 +36,7 @@ const registerUser = async (req, res, next) => {
       const cookieOptions = {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
-        sameSite: 'strict',
+        sameSite: 'none',
       };
       
       res.cookie('jwt', accessToken, { ...cookieOptions, maxAge: 24 * 60 * 60 * 1000 });
@@ -82,7 +82,7 @@ const loginUser = async (req, res, next) => {
       const cookieOptions = {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
-        sameSite: 'strict',
+        sameSite: 'none',
       };
       
       res.cookie('jwt', accessToken, { ...cookieOptions, maxAge: 24 * 60 * 60 * 1000 });
@@ -153,7 +153,7 @@ const refreshToken = async (req, res, next) => {
     const cookieOptions = {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict',
+      sameSite: 'none',
     };
     
     res.cookie('jwt', accessToken, { ...cookieOptions, maxAge: 24 * 60 * 60 * 1000 });
@@ -209,7 +209,7 @@ const logoutUser = async (req, res, next) => {
     const cookieOptions = {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict',
+      sameSite: 'none',
     };
     
     res.cookie('jwt', '', { ...cookieOptions, expires: new Date(0) });

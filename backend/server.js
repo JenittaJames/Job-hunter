@@ -16,6 +16,9 @@ connectDB();
 
 const app = express();
 
+// Trust proxy for rate limiter (Render/Heroku deployments)
+app.set('trust proxy', 1);
+
 // Body parser
 app.use(express.json());
 
